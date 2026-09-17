@@ -15,6 +15,15 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running normally.' });
 });
 
+// Register routes
+const cardRoutes = require('./routes/cards.routes');
+app.use('/api/cards', cardRoutes);
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ message: 'Endpoint tidak ditemukan.' });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
