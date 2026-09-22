@@ -1,0 +1,66 @@
+.page {
+  width: min(100%, 680px);
+  margin: 0 auto;
+  padding: 28px 16px 48px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.pageHeader { margin-bottom: 24px; }
+.eyebrow {
+  margin: 0 0 8px;
+  color: #147d72;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pageHeader h1, .successPanel h1 { margin: 0; color: #173b3a; font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; }
+.intro { margin: 12px 0 20px; color: #56706e; font-size: 0.98rem; }
+.cardId {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid #cfe3df;
+  border-radius: 8px;
+  background: #eff8f5;
+  color: #56706e;
+  font-size: 0.85rem;
+}
+.cardId strong { color: #173b3a; font-family: ui-monospace, monospace; }
+.formStack { display: grid; gap: 16px; }
+.errorBanner {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid #e5a5a5;
+  border-radius: 8px;
+  background: #fff1f1;
+  color: #9f2727;
+  font-size: 0.9rem;
+}
+.successPanel {
+  margin-top: 12vh;
+  padding: 32px 24px;
+  border: 1px solid #cfe3df;
+  border-radius: 8px;
+  background: #f5fbf9;
+  text-align: center;
+}
+.successIcon {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #147d72;
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.successText { margin-top: 16px; color: #56706e; }
+
+@media (min-width: 640px) {
+  .page { padding-top: 56px; }
+}

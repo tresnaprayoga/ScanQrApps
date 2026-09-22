@@ -12,7 +12,7 @@ function isValidGoogleReviewUrl(value) {
   }
 }
 
-export default function ActivationForm({ onSubmit, loading }) {
+export default function ActivationForm({ onSubmit, loading, pinComplete, formComplete, onFormChange }) {
   const [form, setForm] = useState({
     business_name: '',
     business_address: '',
@@ -25,6 +25,7 @@ export default function ActivationForm({ onSubmit, loading }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (onFormChange) onFormChange({ ...form, [name]: value });
     // Clear error on change
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
@@ -158,7 +159,7 @@ export default function ActivationForm({ onSubmit, loading }) {
           )}
         </div>
 
-        <button type="submit" className={styles.submitBtn} disabled={loading}>
+        <button type="submit" className={styles.submitBtn} disabled={loading || !formComplete || !pinComplete}>
           {loading ? (
             <span className={styles.loadingDot}>Menyimpan...</span>
           ) : (
@@ -166,7 +167,7 @@ export default function ActivationForm({ onSubmit, loading }) {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
-              Simpan Data Bisnis
+              Aktifkan kartu
             </>
           )}
         </button>
