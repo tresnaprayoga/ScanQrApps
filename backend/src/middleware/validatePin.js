@@ -47,7 +47,7 @@ const validatePin = async (req, res, next) => {
     if (failedRecord.count >= MAX_ATTEMPTS) {
       return res.status(429).json({
         message: 'Terlalu banyak percobaan PIN. Silakan coba lagi nanti.',
-        retry_after_seconds: Math.ceil(WINDOW_MS / 1000)
+        retry_after_seconds: Math.ceil((WINDOW_MS - (now - failedRecord.startedAt)) / 1000)
       });
     }
 

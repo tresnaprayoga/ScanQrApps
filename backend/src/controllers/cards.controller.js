@@ -92,6 +92,9 @@ module.exports = {
       if (business_name !== undefined && (typeof business_name !== 'string' || !business_name.trim())) {
         return res.status(400).json({ message: 'business_name tidak boleh kosong.' });
       }
+      if (business_address !== undefined && typeof business_address !== 'string') {
+        return res.status(400).json({ message: 'business_address harus berupa teks.' });
+      }
       if (review_link !== undefined && !validateReviewLink(review_link)) {
         return res.status(400).json({ message: 'review_link harus berupa link Google Review yang valid.' });
       }
