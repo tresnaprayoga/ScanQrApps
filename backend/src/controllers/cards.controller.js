@@ -80,7 +80,12 @@ module.exports = {
   activateCard,
   verifyPin: (req, res) => res.status(200).json({
     message: 'PIN valid.',
-    data: { card_id: req.params.card_id }
+    data: {
+      card_id: req.params.card_id,
+      business_name: req.card.business_name,
+      business_address: req.card.business_address || '',
+      review_link: req.card.review_link
+    }
   }),
   updateCard: async (req, res) => {
     try {

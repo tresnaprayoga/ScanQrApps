@@ -9,7 +9,13 @@ import styles from './PinInput.module.css';
  *   error (string)         — pesan error dari parent (opsional)
  *   disabled (bool)
  */
-export default function PinInput({ onChange, error: externalError, disabled }) {
+export default function PinInput({
+  onChange,
+  error: externalError,
+  disabled,
+  label = 'PIN Kartu',
+  helperText = 'Masukkan PIN 4 digit untuk melindungi kartu ini.',
+}) {
   const [digits, setDigits] = useState(['', '', '', '']);
   const [touched, setTouched] = useState(false);
   const refs = [useRef(), useRef(), useRef(), useRef()];
@@ -82,14 +88,14 @@ export default function PinInput({ onChange, error: externalError, disabled }) {
     <div className={styles.wrapper}>
       {/* Label */}
       <label className={styles.label}>
-        PIN Kartu <span className={styles.required}>*</span>
+          {label} <span className={styles.required}>*</span>
       </label>
 
       {/* Helper text */}
       <div className={styles.helperBox}>
         <span className={styles.helperIcon}>🔒</span>
         <p className={styles.helperText}>
-          Buat PIN 4 digit untuk melindungi kartu ini. PIN digunakan saat UMKM ingin mengubah data kartu di kemudian hari. <strong>Jangan bagikan PIN ke siapapun.</strong>
+          {helperText} <strong>Jangan bagikan PIN ke siapapun.</strong>
         </p>
       </div>
 

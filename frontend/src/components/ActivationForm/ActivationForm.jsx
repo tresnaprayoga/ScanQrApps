@@ -12,20 +12,32 @@ function isValidGoogleReviewUrl(value) {
   }
 }
 
-export default function ActivationForm({ onSubmit, loading, pinComplete, formComplete, onFormChange }) {
-  const [form, setForm] = useState({
+export default function ActivationForm({
+  onSubmit,
+  loading,
+  pinComplete,
+  formComplete,
+  onFormChange,
+  initialData,
+  title = 'Data Bisnis UMKM',
+  subtitle = 'Isi informasi berikut untuk mengaktivasi kartu',
+  submitLabel = 'Aktifkan kartu',
+}) {
+  const emptyForm = {
     business_name: '',
     business_address: '',
     review_link: '',
-  });
+  };
+  const [form, setForm] = useState({ ...emptyForm, ...initialData });
 
   const [errors, setErrors] = useState({});
   const [showHelper, setShowHelper] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (onFormChange) onFormChange({ ...form, [name]: value });
+    const nextForm = { ...form, [name]: value };
+    setForm(nextForm);
+    if (onFormChange) onFormChange(nextForm);
     // Clear error on change
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
@@ -65,8 +77,8 @@ export default function ActivationForm({ onSubmit, loading, pinComplete, formCom
           </svg>
         </div>
         <div>
-          <h2 className={styles.title}>Data Bisnis UMKM</h2>
-          <p className={styles.subtitle}>Isi informasi berikut untuk mengaktivasi kartu</p>
+          <h2 className={styles.title}>{title}</h2>
+          <p className={styles.subtitle}>{subtitle}</p>
         </div>
       </div>
 
@@ -167,7 +179,7 @@ export default function ActivationForm({ onSubmit, loading, pinComplete, formCom
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
-              Aktifkan kartu
+              {submitLabel}
             </>
           )}
         </button>
