@@ -109,6 +109,11 @@ QrcodeApp/
 - Sistem menyimpan mapping: ID kartu → link review Google, nama bisnis, PIN (di-hash)
 - Status kartu berubah dari "belum aktif" menjadi "aktif"
 
+**Proteksi aktivasi awal (Issue #15):** setiap kartu memiliki kode verifikasi unik 8 karakter
+yang dicetak di bagian belakang atau pada stiker scratch-off. Backend hanya menyimpan hash kode
+dengan bcrypt dan menolak aktivasi jika kode kosong atau tidak cocok. Pendekatan ini dipilih
+untuk mencegah aktivasi hanya bermodal QR tanpa menambah alur admin penjualan pada v1.
+
 ### 6.3 Redirect Otomatis (QR/NFC)
 - Saat kartu di-scan/tap, sistem membaca ID kartu dari URL
 - Jika kartu berstatus aktif → redirect ke link review Google Bisnis UMKM
@@ -179,6 +184,7 @@ Pelanggan tap NFC / scan QR di kartu
 | review_link | TEXT | Link ulasan Google Bisnis (diisi manual) |
 | place_id | VARCHAR(255) NULL | Disiapkan untuk enhancement v1.2 (Google Places), kosong di v1.0 |
 | pin_hash | VARCHAR(255) | PIN yang sudah di-hash (bcrypt) |
+| activation_code_hash | VARCHAR(255) | Hash kode verifikasi unik yang dicetak per kartu |
 | status | ENUM('belum_aktif','aktif') | Status kartu |
 | activated_at | DATETIME | Waktu aktivasi |
 | created_at | DATETIME | Waktu kartu dibuat/dicetak |

@@ -18,6 +18,7 @@ export default function ActivationPage() {
   const { card_id: cardId } = useParams();
   const [pin, setPin] = useState('');
   const [businessData, setBusinessData] = useState({
+    activation_code: '',
     business_name: '',
     business_address: '',
     review_link: '',
@@ -26,7 +27,9 @@ export default function ActivationPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null);
   const formComplete = Boolean(
-    businessData.business_name.trim() && isValidReviewLink(businessData.review_link.trim()),
+    /^[A-Za-z0-9]{8}$/.test(businessData.activation_code.trim())
+      && businessData.business_name.trim()
+      && isValidReviewLink(businessData.review_link.trim()),
   );
 
   const activateCard = async (form) => {

@@ -24,6 +24,7 @@ export default function ActivationForm({
   submitLabel = 'Aktifkan kartu',
 }) {
   const emptyForm = {
+    activation_code: '',
     business_name: '',
     business_address: '',
     review_link: '',
@@ -46,6 +47,9 @@ export default function ActivationForm({
 
   const validate = () => {
     const newErrors = {};
+    if (!/^[A-Za-z0-9]{8}$/.test(form.activation_code.trim())) {
+      newErrors.activation_code = 'Kode verifikasi harus terdiri dari 8 karakter.';
+    }
     if (!form.business_name.trim()) {
       newErrors.business_name = 'Nama bisnis wajib diisi.';
     }
@@ -83,6 +87,31 @@ export default function ActivationForm({
       </div>
 
       <form onSubmit={handleSubmit} noValidate className={styles.form}>
+        <div className={styles.fieldGroup}>
+          <label className={styles.label} htmlFor="activation_code">
+            Kode Verifikasi Kartu <span className={styles.required}>*</span>
+          </label>
+          <input
+            id="activation_code"
+            name="activation_code"
+            type="text"
+            className={`${styles.input} ${errors.activation_code ? styles.inputError : ''}`}
+            placeholder="Kode 8 karakter di bagian belakang kartu"
+            value={form.activation_code}
+            onChange={handleChange}
+            disabled={loading}
+            maxLength={8}
+            autoCapitalize="characters"
+            autoComplete="off"
+          />
+          <p className={styles.helperText}>Masukkan kode pada kartu atau stiker scratch-off. Kode ini tidak sama dengan PIN.</p>
+          {errors.activation_code && (
+            <p className={styles.errorText}>
+              <span className={styles.errorIcon}>⚠</span> {errors.activation_code}
+            </p>
+          )}
+        </div>
+
         {/* Business Name */}
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="business_name">

@@ -133,6 +133,13 @@
   gap: 5px;
 }
 
+.helperText {
+  font-size: 0.78rem;
+  color: #6b7280;
+  line-height: 1.4;
+  margin: 0;
+}
+
 .errorIcon {
   font-style: normal;
 }

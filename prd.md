@@ -95,6 +95,13 @@ Admin memilih bisnis dari hasil pencarian
 Admin membuat PIN 4 digit untuk kartu tersebut
 Sistem menyimpan mapping: ID kartu → link review Google, nama bisnis, PIN (di-hash)
 Status kartu berubah dari "belum aktif" menjadi "aktif"
+
+### Proteksi aktivasi awal (Issue #15)
+Setiap kartu dibuat bersama kode verifikasi unik 8 karakter yang dicetak di bagian belakang
+kartu atau pada stiker scratch-off. Sistem hanya menyimpan hash kode tersebut dengan bcrypt.
+Kode wajib dimasukkan bersama data aktivasi; kode yang kosong atau salah ditolak oleh endpoint
+aktivasi. Pendekatan ini dipilih karena mencegah aktivasi oleh pihak yang hanya menemukan QR,
+tanpa memerlukan dashboard penjualan/admin pada v1.
 6.3 Redirect Otomatis (QR/NFC)
 Saat kartu di-scan/tap, sistem membaca ID kartu dari URL
 Jika kartu berstatus aktif → redirect ke link review Google Bisnis UMKM
@@ -154,6 +161,7 @@ business_address	VARCHAR(255) NULL	Alamat UMKM (opsional, diisi manual jika ada)
 review_link	TEXT	Link ulasan Google Bisnis (diisi manual)
 place_id	VARCHAR(255) NULL	Disiapkan untuk enhancement v1.2 (Google Places), kosong di v1.0
 pin_hash	VARCHAR(255)	PIN yang sudah di-hash (bcrypt)
+activation_code_hash	VARCHAR(255)	Hash kode verifikasi unik yang dicetak per kartu
 status	ENUM('belum_aktif','aktif')	Status kartu
 activated_at	DATETIME	Waktu aktivasi
 created_at	DATETIME	Waktu kartu dibuat/dicetak

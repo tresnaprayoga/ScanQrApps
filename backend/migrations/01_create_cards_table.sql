@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS cards (
     review_link TEXT NULL,
     place_id VARCHAR(255) NULL,
     pin_hash VARCHAR(255) NULL,
+    activation_code_hash VARCHAR(255) NULL,
     status ENUM('belum_aktif', 'aktif') DEFAULT 'belum_aktif',
     activated_at DATETIME NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP

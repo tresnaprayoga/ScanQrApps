@@ -13,10 +13,13 @@ const validateReviewLink = (reviewLink) => {
 
 const activateCard = async (req, res) => {
   try {
-    const { card_id, business_name, business_address, review_link, pin } = req.body;
+    const { card_id, business_name, business_address, review_link, pin, activation_code } = req.body;
 
     // Basic Validation
     if (!card_id) return res.status(400).json({ message: 'card_id tidak boleh kosong.' });
+    if (!activation_code || !/^[A-Za-z0-9]{8}$/.test(activation_code)) {
+      return res.status(400).json({ message: 'Kode verifikasi kartu harus terdiri dari 8 karakter.' });
+    }
     if (!business_name) return res.status(400).json({ message: 'business_name tidak boleh kosong.' });
     if (!review_link) return res.status(400).json({ message: 'review_link tidak boleh kosong.' });
     
@@ -48,6 +51,12 @@ const activateCard = async (req, res) => {
     // Check if already active
     if (card.status === 'aktif') {
       return res.status(400).json({ message: 'Kartu ini sudah aktif. Gunakan fungsi edit (update) untuk mengubah data.' });
+    }
+
+    const validActivationCode = card.activation_code_hash
+      && await bcrypt.compare(activation_code.toUpperCase(), card.activation_code_hash);
+    if (!validActivationCode) {
+      return res.status(403).json({ message: 'Kode verifikasi kartu tidak valid.' });
     }
 
     // Hash PIN
