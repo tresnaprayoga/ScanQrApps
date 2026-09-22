@@ -2,7 +2,7 @@ const CardModel = require('../models/card.model');
 
 const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
 
-const redirectCard = async (req, res) => {
+const redirectCard = async (req, res, next) => {
   const { card_id: cardId } = req.params;
 
   try {
@@ -29,8 +29,7 @@ const redirectCard = async (req, res) => {
 
     return res.redirect(302, card.review_link);
   } catch (error) {
-    console.error('Error redirecting card:', error);
-    return res.status(500).json({ message: 'Terjadi kesalahan pada server.' });
+    next(error);
   }
 };
 

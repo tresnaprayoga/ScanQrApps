@@ -1,62 +1,26 @@
 const CardModel = require('../models/card.model');
 const bcrypt = require('bcrypt');
+const { AppError } = require('../middleware/errorHandler');
 
-const validateReviewLink = (reviewLink) => {
-  try {
-    const url = new URL(reviewLink);
-    const validDomains = ['google.com', 'g.page', 'goo.gl'];
-    return validDomains.some(domain => url.hostname === domain || url.hostname.endsWith(`.${domain}`));
-  } catch (error) {
-    return false;
-  }
-};
-
-const activateCard = async (req, res) => {
+const activateCard = async (req, res, next) => {
   try {
     const { card_id, business_name, business_address, review_link, pin, activation_code } = req.body;
-
-    // Basic Validation
-    if (!card_id) return res.status(400).json({ message: 'card_id tidak boleh kosong.' });
-    if (!activation_code || !/^[A-Za-z0-9]{8}$/.test(activation_code)) {
-      return res.status(400).json({ message: 'Kode verifikasi kartu harus terdiri dari 8 karakter.' });
-    }
-    if (!business_name) return res.status(400).json({ message: 'business_name tidak boleh kosong.' });
-    if (!review_link) return res.status(400).json({ message: 'review_link tidak boleh kosong.' });
-    
-    // PIN Validation (4 digits exactly)
-    if (!pin || !/^\d{4}$/.test(pin)) {
-      return res.status(400).json({ message: 'PIN harus berupa 4 digit angka.' });
-    }
-
-    // URL Validation
-    try {
-      const url = new URL(review_link);
-      // Validasi untuk memastikan URL adalah dari domain Google (google.com, g.page, goo.gl)
-      const validDomains = ['google.com', 'g.page', 'goo.gl'];
-      const isValidDomain = validDomains.some(domain => url.hostname === domain || url.hostname.endsWith(`.${domain}`));
-      
-      if (!isValidDomain) {
-        return res.status(400).json({ message: 'review_link harus berupa link Google Review yang valid (misal: google.com, g.page).' });
-      }
-    } catch (err) {
-      return res.status(400).json({ message: 'Format review_link tidak valid (harus berupa URL yang benar).' });
-    }
 
     // Check if card exists
     const card = await CardModel.findById(card_id);
     if (!card) {
-      return res.status(404).json({ message: `Kartu dengan ID ${card_id} tidak ditemukan.` });
+      return next(new AppError(404, 'CARD_NOT_FOUND', `Kartu dengan ID ${card_id} tidak ditemukan.`));
     }
 
     // Check if already active
     if (card.status === 'aktif') {
-      return res.status(400).json({ message: 'Kartu ini sudah aktif. Gunakan fungsi edit (update) untuk mengubah data.' });
+      return next(new AppError(409, 'CARD_ALREADY_ACTIVE', 'Kartu ini sudah aktif. Gunakan fungsi edit (update) untuk mengubah data.'));
     }
 
     const validActivationCode = card.activation_code_hash
       && await bcrypt.compare(activation_code.toUpperCase(), card.activation_code_hash);
     if (!validActivationCode) {
-      return res.status(403).json({ message: 'Kode verifikasi kartu tidak valid.' });
+      return next(new AppError(403, 'INVALID_ACTIVATION_CODE', 'Kode verifikasi kartu tidak valid.'));
     }
 
     // Hash PIN
@@ -80,8 +44,7 @@ const activateCard = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error activating card:', error);
-    return res.status(500).json({ message: 'Terjadi kesalahan pada server.' });
+    next(error);
   }
 };
 
@@ -96,22 +59,9 @@ module.exports = {
       review_link: req.card.review_link
     }
   }),
-  updateCard: async (req, res) => {
+  updateCard: async (req, res, next) => {
     try {
       const { business_name, business_address, review_link } = req.body || {};
-
-      if (business_name === undefined && business_address === undefined && review_link === undefined) {
-        return res.status(400).json({ message: 'Minimal satu data bisnis harus diisi.' });
-      }
-      if (business_name !== undefined && (typeof business_name !== 'string' || !business_name.trim())) {
-        return res.status(400).json({ message: 'business_name tidak boleh kosong.' });
-      }
-      if (business_address !== undefined && typeof business_address !== 'string') {
-        return res.status(400).json({ message: 'business_address harus berupa teks.' });
-      }
-      if (review_link !== undefined && !validateReviewLink(review_link)) {
-        return res.status(400).json({ message: 'review_link harus berupa link Google Review yang valid.' });
-      }
 
       await CardModel.update(req.params.card_id, {
         business_name,
@@ -130,8 +80,7 @@ module.exports = {
         }
       });
     } catch (error) {
-      console.error('Error updating card:', error);
-      return res.status(500).json({ message: 'Terjadi kesalahan pada server.' });
+      next(error);
     }
   }
 };
