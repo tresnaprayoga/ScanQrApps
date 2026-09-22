@@ -19,6 +19,9 @@ app.get('/api/health', (req, res) => {
 const cardRoutes = require('./routes/cards.routes');
 app.use('/api/cards', cardRoutes);
 
+const redirectRoutes = require('./routes/redirect.routes');
+app.use('/r', redirectRoutes);
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Endpoint tidak ditemukan.' });

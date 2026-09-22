@@ -12,6 +12,14 @@ class CardModel {
     return rows.length > 0 ? rows[0] : null;
   }
 
+  static async findForRedirect(cardId) {
+    const [rows] = await db.query(
+      'SELECT id, status, review_link FROM cards WHERE id = ?',
+      [cardId]
+    );
+    return rows.length > 0 ? rows[0] : null;
+  }
+
   /**
    * Activate a card with business data and PIN
    * @param {string} cardId 
