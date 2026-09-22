@@ -51,11 +51,11 @@ class CardModel {
   /**
    * Update existing active card data
    * @param {string} cardId 
-   * @param {object} data - dynamic object containing fields to update
+  * @param {object} data - business fields to update
    * @returns {object} result
    */
   static async update(cardId, data) {
-    const { business_name, business_address, review_link, pin_hash } = data;
+    const { business_name, business_address, review_link } = data;
     
     const fields = [];
     const values = [];
@@ -72,11 +72,6 @@ class CardModel {
       fields.push('review_link = ?');
       values.push(review_link);
     }
-    if (pin_hash !== undefined) {
-      fields.push('pin_hash = ?');
-      values.push(pin_hash);
-    }
-
     // Nothing to update
     if (fields.length === 0) return { affectedRows: 0 };
 
