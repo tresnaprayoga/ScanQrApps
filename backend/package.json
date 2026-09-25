@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "db:setup": "node scripts/seedCards.js"
+    "db:setup": "node scripts/seedCards.js",
+    "qr": "node scripts/generateQr.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mysql2": "^3.24.4"
+    ,"qrcode": "^1.5.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
