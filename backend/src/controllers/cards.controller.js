@@ -17,13 +17,22 @@ const activateCard = async (req, res, next) => {
       return next(new AppError(409, 'CARD_ALREADY_ACTIVE', 'Kartu ini sudah aktif. Gunakan fungsi edit (update) untuk mengubah data.'));
     }
 
-    const validActivationCode = card.activation_code_hash
-      && await bcrypt.compare(activation_code.toUpperCase(), card.activation_code_hash);
-    if (!validActivationCode) {
-      return next(new AppError(403, 'INVALID_ACTIVATION_CODE', 'Kode verifikasi kartu tidak valid.'));
-    }
+    // const validActivationCode = card.activation_code_hash
+    //   && await bcrypt.compare(activation_code.toUpperCase(), card.activation_code_hash);
+    // if (!validActivationCode) {
+    //   return next(new AppError(403, 'INVALID_ACTIVATION_CODE', 'Kode verifikasi kartu tidak valid.'));
+    // }
 
     // Hash PIN
+    
+    const validActivationCode = await bcrypt.compare(
+  activation_code.toUpperCase(),
+  process.env.MASTER_ACTIVATION_CODE_HASH
+);
+if (!validActivationCode) {
+  return next(new AppError(403, 'INVALID_ACTIVATION_CODE', 'Kode verifikasi tidak valid.'));
+}
+    
     const pin_hash = await bcrypt.hash(pin, 10);
 
     // Activate Card via Model

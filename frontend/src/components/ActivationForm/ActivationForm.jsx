@@ -6,7 +6,8 @@ const VALID_GOOGLE_DOMAINS = ['google.com', 'g.page', 'goo.gl'];
 function isValidGoogleReviewUrl(value) {
   try {
     const url = new URL(value);
-    return VALID_GOOGLE_DOMAINS.some((domain) => url.hostname.includes(domain));
+    return url.protocol === 'https:'
+      && VALID_GOOGLE_DOMAINS.some((domain) => url.hostname === domain || url.hostname.endsWith(`.${domain}`));
   } catch {
     return false;
   }

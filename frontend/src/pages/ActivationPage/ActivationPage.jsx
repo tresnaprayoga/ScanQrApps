@@ -8,7 +8,8 @@ import styles from './ActivationPage.module.css';
 function isValidReviewLink(value) {
   try {
     const url = new URL(value);
-    return ['google.com', 'g.page', 'goo.gl'].some((domain) => url.hostname.includes(domain));
+    return url.protocol === 'https:'
+      && ['google.com', 'g.page', 'goo.gl'].some((domain) => url.hostname === domain || url.hostname.endsWith(`.${domain}`));
   } catch {
     return false;
   }
@@ -46,7 +47,9 @@ export default function ActivationPage() {
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(result.message || 'Aktivasi kartu gagal. Silakan coba lagi.');
+        throw new Error(
+          result.error?.message || result.message || 'Aktivasi kartu gagal. Silakan coba lagi.'
+        );
       }
       setSuccess(result.data || { card_id: cardId, business_name: form.business_name });
     } catch (requestError) {
