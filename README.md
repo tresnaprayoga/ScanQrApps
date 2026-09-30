@@ -25,4 +25,6 @@ Aplikasi Scan QR yang terdiri dari frontend dan backend.
 4. Setup Database & Seeding: Jalankan `npm run db:setup` di folder `backend/` untuk otomatis membuat database, tabel `cards`, dan men-generate 50 ID kartu awal (A001-A050).
 5. Jalankan server: `npm run dev` atau `npm start`
 
-Untuk endpoint QR/NFC `GET /r/:card_id`, atur `FRONTEND_URL` di `backend/.env` ke alamat frontend yang digunakan. Nilai default saat development adalah `http://localhost:5173`.
+Untuk pengujian skenario aktivasi, proses seeding juga membuat atau mereset kartu `TEST01` ke status belum aktif dengan kode verifikasi `TEST1234`.
+
+Untuk endpoint QR/NFC `GET /r/:card_id`, jalankan frontend di `http://localhost:3000` dan backend di port `5000`. Frontend mem-proxy request `/r` dan `/api` ke backend, sedangkan `FRONTEND_URL=http://localhost:3000` mengarahkan kartu yang belum aktif ke halaman aktivasi.
